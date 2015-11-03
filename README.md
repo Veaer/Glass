@@ -45,6 +45,8 @@ a library about status and theme
                     .background(colorView)
                     .build();
     ```
+    
+[点击下载APK](glass-demo.apk)
 #源代码在 GPLv3 协议下发布
 
 [LICENSE](/LICENSE)
