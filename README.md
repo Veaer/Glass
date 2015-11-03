@@ -10,7 +10,7 @@ a library about status and theme
 
 这三个就是完全的典型了，可以看到ES状态栏还是会有一道半透明的灰条，而豌豆荚在上滑的时候会发生奇怪的事情，我觉得最美反倒是避开了这个事情。。。
 
-然后动手写了个实现4.4到5.0之间的版本解放状态栏的东西(黑科技)，当然并没有什么了不得的东西。。。
+然后动手写了个实现4.4到5.0之间的版本解放状态栏的东西(黑科技)，当然并没有什么了不得的东西。。。如果大家有更好的解决方法，希望多多交流，欢迎大家多多issues和pr
 
 也可以用来实现"快速换肤"的效果
 
@@ -38,7 +38,7 @@ a library about status and theme
     不适应5.0以下
     ```
     mGlass = Glass.Builder.newInstance()
-                    .statusBar(getWindow(), App.mContext, ContextCompat.getColor(App.mContext, R.color.colorPrimary))
+                    .statusBar(getWindow(), ContextCompat.getColor(App.mContext, R.color.colorPrimary))
                     .text(textView)
                     .background(appBar)
                     .background(fab)
