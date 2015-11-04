@@ -46,6 +46,17 @@ a library about status and theme
                     .build();
     ```
     
+使用方法(虽然还有坑，但是先发上来吧)：
+
+    ```
+        repositories {
+            maven {
+                url 'https://dl.bintray.com/veaer/maven/'
+            }
+        }
+        compile 'king.veaer:glass:1.0.0'
+    ```
+    
 [点击下载APK](http://fir.im/vGlass)
 #源代码在 GPLv3 协议下发布
 
