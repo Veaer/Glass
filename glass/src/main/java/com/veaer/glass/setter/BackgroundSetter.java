@@ -23,7 +23,7 @@ public class BackgroundSetter extends Setter {
     }
 
     @Override
-    void onSetColor(@ColorInt int color) {
+    protected void onSetColor(@ColorInt int color) {
         view.setBackgroundColor(color);
     }
 }

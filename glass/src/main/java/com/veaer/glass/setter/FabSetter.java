@@ -28,7 +28,7 @@ class FabSetter extends Setter {
     }
 
     @Override
-    public void onSetColor(@ColorInt int colour) {
+    protected void onSetColor(@ColorInt int colour) {
         ColorStateList colorStateList = ColorStateList.valueOf(colour).withAlpha(ALPHA_OPAQUE);
         methodInvoker.invoke(colorStateList);
     }

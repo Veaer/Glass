@@ -10,9 +10,11 @@
 package com.veaer.glass;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.v7.graphics.Palette;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,18 +30,57 @@ import java.util.List;
 /**
  * Created by Veaer on 15/11/3.
  */
-public class Glass {
+public class Glass extends Setter {
     private final List<Setter> setters;
+    public static enum paletteType {VIBRANT, VIBRANT_DARK, VIBRANT_LIGHT, MUTED , MUTED_DARK, MUTED_LIGHT};
+    private Glass.paletteType mPaletteType = paletteType.MUTED_DARK;
 
     private Glass(List<Setter> setters) {
         this.setters = setters;
     }
 
-    public void setColor(@ColorInt int colour) {
+    @Override
+    protected void onSetColor(@ColorInt int color) {
         for (Setter setter : setters) {
-            setter.setColor(colour);
+            setter.setColor(color);
         }
     }
+
+    public void setPaletteBmp(Bitmap bitmap) {
+        paletteType.MUTED_DARK.ordinal();
+        new Palette.Builder(bitmap).generate(listener);
+    }
+
+    public void setPaletteBmp(Bitmap bitmap, Glass.paletteType type) {
+        this.mPaletteType = type;
+        new Palette.Builder(bitmap).generate(listener);
+    }
+
+    private Palette.PaletteAsyncListener listener = new Palette.PaletteAsyncListener() {
+        @Override
+        public void onGenerated(Palette newPalette) {
+            switch (mPaletteType) {
+                case VIBRANT :
+                    setColor(newPalette.getVibrantColor(0));
+                    break;
+                case VIBRANT_DARK :
+                    setColor(newPalette.getDarkVibrantColor(0));
+                    break;
+                case VIBRANT_LIGHT :
+                    setColor(newPalette.getLightVibrantColor(0));
+                    break;
+                case MUTED :
+                    setColor(newPalette.getMutedColor(0));
+                    break;
+                case MUTED_DARK :
+                    setColor(newPalette.getDarkMutedColor(0));
+                    break;
+                case MUTED_LIGHT :
+                    setColor(newPalette.getLightMutedColor(0));
+                    break;
+            }
+        }
+    };
 
     public static final class Builder {
         private List<Setter> setters;
@@ -88,6 +129,7 @@ public class Glass {
             }
             return this;
         }
+
 
         public Glass build() {
             return new Glass(setters);

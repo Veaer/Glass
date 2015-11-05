@@ -31,13 +31,22 @@
             android:layout_height="200dp"
             android:gravity="center"
             android:textSize="30sp"
-            android:text="Hello Glass!" />
+            android:text="@string/hello" />
 
         <TextView
             android:id="@+id/color_view"
             android:layout_below="@id/text_view"
             android:layout_width="match_parent"
             android:layout_height="200dp"/>
+
+        <TextView
+            android:id="@+id/second_view"
+            android:layout_below="@id/color_view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="@string/to_second"
+            android:gravity="center"
+            android:textSize="20sp"/>
 
     </RelativeLayout>
 

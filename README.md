@@ -25,7 +25,6 @@ a library about status and theme
 使用方法：
     
     适应5.0以下
-    ```
     mGlass = Glass.Builder.newInstance()
                     .statusBarWithLower(getWindow(), App.mContext, ContextCompat.getColor(App.mContext, R.color.colorPrimary))
                     .text(textView)
@@ -33,10 +32,8 @@ a library about status and theme
                     .background(fab)
                     .background(colorView)
                     .build();
-    ```
     
     不适应5.0以下
-    ```
     mGlass = Glass.Builder.newInstance()
                     .statusBar(getWindow(), ContextCompat.getColor(App.mContext, R.color.colorPrimary))
                     .text(textView)
@@ -44,18 +41,18 @@ a library about status and theme
                     .background(fab)
                     .background(colorView)
                     .build();
-    ```
     
 使用方法(虽然还有坑，但是先发上来吧)：
 
-    ```
-        repositories {
-            maven {
-                url 'https://dl.bintray.com/veaer/maven/'
-            }
-        }
-        compile 'king.veaer:glass:1.0.0'
-    ```
+        compile 'king.veaer:glass:1.0.1'
+    
+    
+2015.11.5更新
+
+新加入palette支持,那些视图顶部就是图片的少年
+
+<img src="/images/palette.gif" width="200" height="350" />
+
     
 [点击下载APK](http://fir.im/vGlass)
 #源代码在 GPLv3 协议下发布

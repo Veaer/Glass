@@ -25,7 +25,7 @@ class SystemSetter extends Setter {
     }
 
     @Override
-    public void onSetColor(@ColorInt int colour) {
+    protected void onSetColor(@ColorInt int colour) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setStatusBarColour(colour);
             setNavigationBarColour(colour);

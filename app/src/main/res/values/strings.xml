@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">glass-demo</string>
+    <string name="hello">Hello Glass!</string>
+    <string name="to_second">点我去另一个Activity</string>
 </resources>

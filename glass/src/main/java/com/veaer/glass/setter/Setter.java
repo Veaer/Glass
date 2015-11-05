@@ -15,5 +15,5 @@ public abstract class Setter {
         }
     }
 
-    abstract void onSetColor(@ColorInt int color);
+    protected abstract void onSetColor(@ColorInt int color);
 }
