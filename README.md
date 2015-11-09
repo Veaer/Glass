@@ -55,7 +55,7 @@ a library about status and theme
 
     
 [点击下载APK](http://fir.im/vGlass)
-#源代码在 GPLv3 协议下发布
+#源代码在 MIT 协议下发布
 
 [LICENSE](/LICENSE)
 
