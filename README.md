@@ -26,7 +26,8 @@ a library about status and theme
     
     适应5.0以下
     mGlass = Glass.Builder.newInstance()
-                    .statusBarWithLower(getWindow(), App.mContext, ContextCompat.getColor(App.mContext, R.color.colorPrimary))
+                    .statusBarWithLower(getWindow(), App.mContext)
+                    .defaultColor(Color.RED)
                     .text(textView)
                     .background(appBar)
                     .background(fab)
@@ -35,7 +36,7 @@ a library about status and theme
     
     不适应5.0以下
     mGlass = Glass.Builder.newInstance()
-                    .statusBar(getWindow(), ContextCompat.getColor(App.mContext, R.color.colorPrimary))
+                    .statusBar(getWindow())
                     .text(textView)
                     .background(appBar)
                     .background(fab)
@@ -53,7 +54,16 @@ a library about status and theme
 
 <img src="/images/palette.gif" width="200" height="350" />
 
+2015.12.6更新
+
+更改5.0以下机型实现方式(在根布局设置``android:fitsSystemWindows="true"``，如果有需要，还要设置``android:clipToPadding="false"``)
+
+新增ViewPager支持。
+
+<img src="/images/view_page.gif" width="200" height="350" />
     
+去除demo,这只是个单纯的裤子ಥ_ಥ
+
 [点击下载APK](http://fir.im/vGlass)
 #源代码在 MIT 协议下发布
 

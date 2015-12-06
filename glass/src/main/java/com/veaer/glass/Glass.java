@@ -11,18 +11,25 @@ package com.veaer.glass;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.veaer.glass.setter.Setter;
 import com.veaer.glass.setter.SetterFactory;
 import com.veaer.glass.util.LocalDisplay;
+import com.veaer.glass.viewpager.ColorProvider;
+import com.veaer.glass.viewpager.PagerTrigger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +39,15 @@ import java.util.List;
  */
 public class Glass extends Setter {
     private final List<Setter> setters;
-    public static enum paletteType {VIBRANT, VIBRANT_DARK, VIBRANT_LIGHT, MUTED , MUTED_DARK, MUTED_LIGHT};
+    public enum paletteType {VIBRANT, VIBRANT_DARK, VIBRANT_LIGHT, MUTED , MUTED_DARK, MUTED_LIGHT}
     private Glass.paletteType mPaletteType = paletteType.MUTED_DARK;
 
     private Glass(List<Setter> setters) {
         this.setters = setters;
+    }
+    private Glass(List<Setter> setters, ViewPager viewPager, ColorProvider colorProvider) {
+        this.setters = setters;
+        PagerTrigger.addTrigger(viewPager, colorProvider, this);
     }
 
     @Override
@@ -47,13 +58,16 @@ public class Glass extends Setter {
     }
 
     public void setPaletteBmp(Bitmap bitmap) {
-        paletteType.MUTED_DARK.ordinal();
         new Palette.Builder(bitmap).generate(listener);
     }
 
     public void setPaletteBmp(Bitmap bitmap, Glass.paletteType type) {
         this.mPaletteType = type;
-        new Palette.Builder(bitmap).generate(listener);
+        setPaletteBmp(bitmap);
+    }
+
+    public void onDestory() {
+        this.setters.clear();
     }
 
     private Palette.PaletteAsyncListener listener = new Palette.PaletteAsyncListener() {
@@ -83,7 +97,11 @@ public class Glass extends Setter {
     };
 
     public static final class Builder {
+        private int defaultColor = Color.parseColor("#3F51B5");
+        private boolean changeColor = false;
         private List<Setter> setters;
+        private ViewPager viewPager;
+        private ColorProvider colorProvider;
 
 
         public static Builder newInstance() {
@@ -109,22 +127,37 @@ public class Glass extends Setter {
             return add(SetterFactory.getTextSetter(view));
         }
 
-        public Builder statusBar(Window window, @ColorInt int defaultColor) {
-            return statusBarWithLower(window, null, defaultColor);
+        public Builder statusBar(Window window) {
+            return statusBarWithLower(window, null);
         }
 
-        public Builder statusBarWithLower(Window window, Context context, @ColorInt int defaultColor) {
+        public Builder setViewPager(ViewPager viewPager, ColorProvider colorProvider) {
+            this.viewPager = viewPager;
+            this.colorProvider = colorProvider;
+            return this;
+        }
+
+        public Builder defaultColor(@ColorInt int defaultColor) {
+            this.defaultColor = defaultColor;
+            changeColor = true;
+            return this;
+        }
+
+        public Builder statusBarWithLower(Window window, Context context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 LocalDisplay.init(context);
                 WindowManager.LayoutParams localLayoutParams = window.getAttributes();
                 localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
-                View contentView = window.getDecorView().findViewById(android.R.id.content);
-                contentView.setBackgroundColor(defaultColor);
-                LocalDisplay.addTopPadding(contentView, 25);
-                background(contentView);
+                ViewGroup contentView = (ViewGroup)window.getDecorView().findViewById(android.R.id.content);
+                View mStatusBarView = new View(context);
+                int height =  LocalDisplay.getStatusHeight(context.getResources());
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, height);
+                params.gravity = Gravity.TOP;
+                mStatusBarView.setLayoutParams(params);
+                contentView.addView(mStatusBarView);
+                background(mStatusBarView);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Setter windowSetter = SetterFactory.getSystemSetter(window);
-                windowSetter.setColor(defaultColor);
                 add(windowSetter);
             }
             return this;
@@ -132,7 +165,16 @@ public class Glass extends Setter {
 
 
         public Glass build() {
-            return new Glass(setters);
+            Glass mGlass;
+            if(viewPager != null && colorProvider != null) {
+                mGlass = new Glass(setters, viewPager, colorProvider);
+            } else {
+                mGlass = new Glass(setters);
+            }
+            if(changeColor) {
+                mGlass.setColor(defaultColor);
+            }
+            return mGlass;
         }
     }
 

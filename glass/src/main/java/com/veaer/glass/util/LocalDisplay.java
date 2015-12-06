@@ -10,6 +10,7 @@
 package com.veaer.glass.util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
@@ -52,6 +53,19 @@ public class LocalDisplay {
         }
 
         return dp2px(designedDp);
+    }
+
+    public static int getStatusHeight(Resources res) {
+        return getInternalDimensionSize(res, "status_bar_height");
+    }
+
+    private static int getInternalDimensionSize(Resources res, String key) {
+        int result = 0;
+        int resourceId = res.getIdentifier(key, "dimen", "android");
+        if (resourceId > 0) {
+            result = res.getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     public static void setPadding(View view, float left, float top, float right, float bottom) {
