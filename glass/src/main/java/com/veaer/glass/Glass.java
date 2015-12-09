@@ -67,7 +67,7 @@ public class Glass extends Setter {
         setPaletteBmp(bitmap);
     }
 
-    public void onDestory() {
+    public void onDestroy() {
         this.setters.clear();
         pagerTrigger.destroy();
     }
