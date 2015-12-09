@@ -69,7 +69,7 @@ public class Glass extends Setter {
 
     public void onDestory() {
         this.setters.clear();
-        pagerTrigger.destory();
+        pagerTrigger.destroy();
     }
 
     private Palette.PaletteAsyncListener listener = new Palette.PaletteAsyncListener() {

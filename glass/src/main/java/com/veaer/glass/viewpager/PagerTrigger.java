@@ -51,7 +51,7 @@ public class PagerTrigger implements ViewPager.OnPageChangeListener {
         initColorGenerator();
     }
 
-    public void destory() {
+    public void destroy() {
         mGlass = null;
     }
 
