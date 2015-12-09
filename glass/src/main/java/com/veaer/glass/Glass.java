@@ -48,7 +48,7 @@ public class Glass extends Setter {
     }
     private Glass(List<Setter> setters, ViewPager viewPager, ColorProvider colorProvider) {
         this.setters = setters;
-        this.pagerTrigger = PagerTrigger.addTrigger(viewPager, colorProvider, this);
+        this.pagerTrigger = PagerTrigger.addTrigger(viewPager, colorProvider, setters);
     }
 
     @Override
@@ -129,10 +129,6 @@ public class Glass extends Setter {
             return add(SetterFactory.getTextSetter(view));
         }
 
-        public Builder statusBar(Window window) {
-            return statusBarWithLower(window, null);
-        }
-
         public Builder setViewPager(ViewPager viewPager, ColorProvider colorProvider) {
             this.viewPager = viewPager;
             this.colorProvider = colorProvider;
@@ -145,8 +141,9 @@ public class Glass extends Setter {
             return this;
         }
 
-        public Builder statusBarWithLower(Window window, Context context) {
+        public Builder statusBar(Window window) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                Context context = window.getContext();
                 LocalDisplay.init(context);
                 WindowManager.LayoutParams localLayoutParams = window.getAttributes();
                 localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
