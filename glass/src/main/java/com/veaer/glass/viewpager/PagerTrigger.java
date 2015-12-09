@@ -51,6 +51,10 @@ public class PagerTrigger implements ViewPager.OnPageChangeListener {
         initColorGenerator();
     }
 
+    public void destory() {
+        mGlass = null;
+    }
+
     private boolean isScrollingRight(int position) {
         return position == startPosition;
     }
