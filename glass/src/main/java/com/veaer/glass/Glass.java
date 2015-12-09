@@ -39,6 +39,7 @@ import java.util.List;
  */
 public class Glass extends Setter {
     private final List<Setter> setters;
+    private PagerTrigger pagerTrigger;
     public enum paletteType {VIBRANT, VIBRANT_DARK, VIBRANT_LIGHT, MUTED , MUTED_DARK, MUTED_LIGHT}
     private Glass.paletteType mPaletteType = paletteType.MUTED_DARK;
 
@@ -47,7 +48,7 @@ public class Glass extends Setter {
     }
     private Glass(List<Setter> setters, ViewPager viewPager, ColorProvider colorProvider) {
         this.setters = setters;
-        PagerTrigger.addTrigger(viewPager, colorProvider, this);
+        this.pagerTrigger = PagerTrigger.addTrigger(viewPager, colorProvider, this);
     }
 
     @Override
@@ -68,6 +69,7 @@ public class Glass extends Setter {
 
     public void onDestory() {
         this.setters.clear();
+        this.pagerTrigger = null;
     }
 
     private Palette.PaletteAsyncListener listener = new Palette.PaletteAsyncListener() {
