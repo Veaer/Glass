@@ -64,6 +64,9 @@ public class Glass extends Setter {
 
     public void onDestroy() {
         this.setters.clear();
+        for (Trigger trigger : this.triggers) {
+            trigger.destroy();
+        }
         this.triggers.clear();
     }
 

@@ -34,4 +34,8 @@ public class Trigger {
             setter.setColor(newColor);
         }
     }
+
+    public void destroy() {
+        setters.clear();
+    }
 }
