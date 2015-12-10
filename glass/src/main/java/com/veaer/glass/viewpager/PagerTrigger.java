@@ -1,30 +1,25 @@
 package com.veaer.glass.viewpager;
 
-import android.support.annotation.ColorInt;
 import android.support.v4.view.ViewPager;
 
-import com.veaer.glass.setter.Setter;
-
-import java.util.List;
+import com.veaer.glass.trigger.Trigger;
 
 /**
  * Created by Veaer on 15/11/18.
  */
-public class PagerTrigger implements ViewPager.OnPageChangeListener {
+public class PagerTrigger extends Trigger implements ViewPager.OnPageChangeListener {
     private ColorProvider colorProvider;
-    private List<Setter> setters;
     private int startPosition, endPosition, maxLimit;
 
-    public static PagerTrigger addTrigger(ViewPager viewPager, ColorProvider colorProvider, List<Setter> setters) {
-        PagerTrigger viewPagerTrigger = new PagerTrigger(colorProvider, setters);
+    public static Trigger addTrigger(ViewPager viewPager, ColorProvider colorProvider) {
+        PagerTrigger viewPagerTrigger = new PagerTrigger(colorProvider);
         viewPager.addOnPageChangeListener(viewPagerTrigger);
         viewPagerTrigger.onPageSelected(0);
         return viewPagerTrigger;
     }
 
-    PagerTrigger(ColorProvider colorProvider, List<Setter> setters) {
+    PagerTrigger(ColorProvider colorProvider) {
         this.colorProvider = colorProvider;
-        this.setters = setters;
         maxLimit = colorProvider.getCount() - 1;
     }
 
@@ -52,16 +47,6 @@ public class PagerTrigger implements ViewPager.OnPageChangeListener {
         endPosition = position;
         startPosition = position;
         initColorGenerator();
-    }
-
-    public void setColor(@ColorInt int newColor) {
-        for (Setter setter : setters) {
-            setter.setColor(newColor);
-        }
-    }
-
-    public void destroy() {
-        this.setters.clear();
     }
 
     private boolean isScrollingRight(int position) {

@@ -15,7 +15,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
 import android.view.Gravity;
 import android.view.View;
@@ -27,9 +26,9 @@ import android.widget.TextView;
 
 import com.veaer.glass.setter.Setter;
 import com.veaer.glass.setter.SetterFactory;
+import com.veaer.glass.trigger.Trigger;
+import com.veaer.glass.util.ColorBurn;
 import com.veaer.glass.util.LocalDisplay;
-import com.veaer.glass.viewpager.ColorProvider;
-import com.veaer.glass.viewpager.PagerTrigger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,16 +38,11 @@ import java.util.List;
  */
 public class Glass extends Setter {
     private final List<Setter> setters;
-    private PagerTrigger pagerTrigger;
-    public enum paletteType {VIBRANT, VIBRANT_DARK, VIBRANT_LIGHT, MUTED , MUTED_DARK, MUTED_LIGHT}
-    private Glass.paletteType mPaletteType = paletteType.MUTED_DARK;
+    private final List<Trigger> triggers;
 
-    private Glass(List<Setter> setters) {
+    private Glass(List<Setter> setters, List<Trigger> triggers) {
         this.setters = setters;
-    }
-    private Glass(List<Setter> setters, ViewPager viewPager, ColorProvider colorProvider) {
-        this.setters = setters;
-        this.pagerTrigger = PagerTrigger.addTrigger(viewPager, colorProvider, setters);
+        this.triggers = triggers;
     }
 
     @Override
@@ -56,45 +50,24 @@ public class Glass extends Setter {
         for (Setter setter : setters) {
             setter.setColor(color);
         }
+        for (Trigger trigger : triggers) {
+            trigger.setColor(color);
+        }
     }
 
     public void setPaletteBmp(Bitmap bitmap) {
         new Palette.Builder(bitmap).generate(listener);
     }
 
-    public void setPaletteBmp(Bitmap bitmap, Glass.paletteType type) {
-        this.mPaletteType = type;
-        setPaletteBmp(bitmap);
-    }
-
     public void onDestroy() {
         this.setters.clear();
-        pagerTrigger.destroy();
+        this.triggers.clear();
     }
 
     private Palette.PaletteAsyncListener listener = new Palette.PaletteAsyncListener() {
         @Override
         public void onGenerated(Palette newPalette) {
-            switch (mPaletteType) {
-                case VIBRANT :
-                    setColor(newPalette.getVibrantColor(0));
-                    break;
-                case VIBRANT_DARK :
-                    setColor(newPalette.getDarkVibrantColor(0));
-                    break;
-                case VIBRANT_LIGHT :
-                    setColor(newPalette.getLightVibrantColor(0));
-                    break;
-                case MUTED :
-                    setColor(newPalette.getMutedColor(0));
-                    break;
-                case MUTED_DARK :
-                    setColor(newPalette.getDarkMutedColor(0));
-                    break;
-                case MUTED_LIGHT :
-                    setColor(newPalette.getLightMutedColor(0));
-                    break;
-            }
+            setColor(ColorBurn.colorBurn(newPalette.getVibrantSwatch()));
         }
     };
 
@@ -102,8 +75,7 @@ public class Glass extends Setter {
         private int defaultColor = Color.parseColor("#3F51B5");
         private boolean changeColor = false;
         private List<Setter> setters;
-        private ViewPager viewPager;
-        private ColorProvider colorProvider;
+        private List<Trigger> triggers;
 
 
         public static Builder newInstance() {
@@ -121,18 +93,17 @@ public class Glass extends Setter {
             return this;
         }
 
+        public Builder addTrigger(Trigger trigger) {
+            triggers.add(trigger);
+            return this;
+        }
+
         public Builder background(@NonNull View view) {
             return add(SetterFactory.getBackgroundSetter(view));
         }
 
         public Builder text(@NonNull TextView view) {
             return add(SetterFactory.getTextSetter(view));
-        }
-
-        public Builder setViewPager(ViewPager viewPager, ColorProvider colorProvider) {
-            this.viewPager = viewPager;
-            this.colorProvider = colorProvider;
-            return this;
         }
 
         public Builder defaultColor(@ColorInt int defaultColor) {
@@ -143,7 +114,7 @@ public class Glass extends Setter {
 
         public Builder statusBar(Window window) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                Context context = window.getContext();
+                Context context = window.getContext().getApplicationContext();
                 LocalDisplay.init(context);
                 WindowManager.LayoutParams localLayoutParams = window.getAttributes();
                 localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
@@ -162,14 +133,8 @@ public class Glass extends Setter {
             return this;
         }
 
-
         public Glass build() {
-            Glass mGlass;
-            if(viewPager != null && colorProvider != null) {
-                mGlass = new Glass(setters, viewPager, colorProvider);
-            } else {
-                mGlass = new Glass(setters);
-            }
+            Glass mGlass = new Glass(setters, triggers);
             if(changeColor) {
                 mGlass.setColor(defaultColor);
             }

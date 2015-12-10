@@ -45,7 +45,13 @@ a library about status and theme
     
 使用方法(虽然还有坑，但是先发上来吧)：
 
-        compile 'king.veaer:glass:1.0.1'
+        allprojects {
+        		repositories {
+        			...
+        			maven { url "https://jitpack.io" }
+        		}
+        	}
+        compile 'com.github.veaer:Glass:v1.0.2'
     
     
 2015.11.5更新
