@@ -42,6 +42,9 @@ public class Glass extends Setter {
 
     private Glass(List<Setter> setters, List<Trigger> triggers) {
         this.setters = setters;
+        for (Trigger trigger : triggers) {
+            trigger.addSetterList(setters);
+        }
         this.triggers = triggers;
     }
 
@@ -74,8 +77,8 @@ public class Glass extends Setter {
     public static final class Builder {
         private int defaultColor = Color.parseColor("#3F51B5");
         private boolean changeColor = false;
-        private List<Setter> setters;
-        private List<Trigger> triggers;
+        private List<Setter> setters = new ArrayList<>();
+        private List<Trigger> triggers = new ArrayList<>();
 
 
         public static Builder newInstance() {
